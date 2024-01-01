@@ -13,6 +13,11 @@ def on_move(x, y):
 def on_click(x, y, button, pressed):
     print('{0} at {1}'.format('Pressed' if pressed else 'Released', (x, y)))
 
+    # Upon clicking, Append the current mouse coordinates to the coords list
+    if pressed:
+        coords.append((x, y))
+        print(f"Coordinates appended: {coords}")
+
 # Function to identify which key is pressed and if 'c' is pressed, append.
 def on_press(key):
     try:
@@ -42,8 +47,21 @@ with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
     listener.join()
 
 print (coords)
-'''
+
+
 coords_time = []
 for i in range(len(coords)):
-    input_time = input(f"Enter time for coordinate {i + 1}: ")
-'''
+    input_time = int(input(f"Enter time for coordinate in seconds {i + 1}: "))
+    coords_time.append(input_time)
+
+print (coords_time)
+
+loop_number = int(input("How long do you want the thing to be?"))
+
+for x in range (loop_number):
+    for i in range(len(coords)):
+        print("Moved to:", coords[i], "for:", coords_time[i], "seconds")
+        mouse.Controller().position = coords[i]  # Set the mouse position
+        mouse.Controller().click(mouse.Button.left, 1)  # Perform a click
+        time.sleep(coords_time[i])  # Wait for the specified time
+    print (f"Successfully looped for {x+1} / {loop_number} time(s)")
