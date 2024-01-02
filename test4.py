@@ -56,12 +56,32 @@ for i in range(len(coords)):
 
 print (coords_time)
 
-loop_number = int(input("How long do you want the thing to be?"))
+loop_number = int(input("How long do you want the loop to be?"))
 
-for x in range (loop_number):
-    for i in range(len(coords)):
-        print("Moved to:", coords[i], "for:", coords_time[i], "seconds")
-        mouse.Controller().position = coords[i]  # Set the mouse position
-        mouse.Controller().click(mouse.Button.left, 1)  # Perform a click
-        time.sleep(coords_time[i])  # Wait for the specified time
-    print (f"Successfully looped for {x+1} / {loop_number} time(s)")
+def stop_loop(key):
+    if key == keyboard.Key.esc:
+        print("Loop stopped by user.")
+        return False
+
+# Start the keyboard listener to stop the loop
+with keyboard.Listener(on_press=stop_loop) as listener:
+    for x in range(loop_number):
+        if not listener.running: 
+            break 
+        for i in range(len(coords)):
+            if not listener.running:
+                break
+            print("Moved to:", coords[i], "for:", coords_time[i], "seconds")
+            if not listener.running:
+                break
+            mouse.Controller().position = coords[i]  # Set the mouse position
+            if not listener.running: 
+                break
+            mouse.Controller().click(mouse.Button.left, 1)  # Perform a click
+            if not listener.running: 
+                break 
+            time.sleep(coords_time[i])  # Wait for the specified time
+            if not listener.running: 
+                break
+        print(f"Successfully looped for {x+1} / {loop_number} time(s)")
+
